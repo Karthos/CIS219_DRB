@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BeardenDenFileStorage.Controllers
+namespace BeardenDenFileStorage
 {
     public class HomeController
     {
