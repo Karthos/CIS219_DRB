@@ -6,28 +6,25 @@ using System.Threading.Tasks;
 
 namespace BearDenFileStorage
 {
-    public class HomeController : Controller
+    public class FileController : Controller
     {
         private IFileData _files;
-        public HomeController(IFileData files)
+        public FileController(IFileData files)
         {
             _files = files;
         }
 
-        public ViewResult Index()
+        public ViewResult Details()
         {
             var model = _files.GetAll();
+
             return View(model);
+            
         }
 
-        public ViewResult Upload()
+        public string Download()
         {
-            return View();
-        }
-
-        public string Settings()
-        {
-            return "Settings";
+            return "Downloading...";
         }
     }
 }

@@ -1,0 +1,38 @@
+﻿@model List<BearDenFileStorage.File>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Home</title>
+</head>
+<body>
+	<table>
+		<tr>
+			<th>Filename</th>
+			<th>Size</th>
+			<th>Last Modified</th>
+		</tr>
+		@foreach (var file in Model)
+		{
+			<tr>
+				@*For directories, the filename will be a link that takes the user
+				  to a listing of files and directories within
+				*@
+				<td>
+					<a href="File/Details">@file.Filename</a>
+				</td>
+
+				@*Handle directories better*@
+				@if (file.Extension != "")
+				{
+					<td>
+						@file.Size
+					</td>
+					<td>
+						@file.LastModified
+					</td>
+				}
+			</tr>
+		}
+	</table>
+
+</body>
+</html>

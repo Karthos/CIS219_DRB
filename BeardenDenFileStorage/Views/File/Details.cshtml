@@ -1,0 +1,38 @@
+﻿@model IEnumerable<BearDenFileStorage.File>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>File</title>
+</head>
+<body>
+	<table>
+		<tr>
+			<th>Filename</th>
+			<th>Extension</th>
+			<th>Size</th>
+			<th>Created</th>
+			<th>Last Modified</th>
+			<th>Owner</th>
+			<th>Shared with</th>
+		</tr>
+		@{ var file = Model.ElementAt(0);}
+			<tr>
+				<td>@file.Filename</td>
+				<td>@file.Extension</td>
+				<td>@file.Size</td>
+				<td>@file.Created</td>
+				<td>@file.LastModified</td>
+				<td>@file.Owner</td>
+				<td>
+					@for (int i = 0; i < file.SharedUsers.Count; i++)
+					{
+
+						@(file.SharedUsers[i] + (i != file.SharedUsers.Count - 1 ? "," : ""));
+
+					}
+				</td>
+				
+			</tr>
+						
+	</table>
+</body>
+</html>

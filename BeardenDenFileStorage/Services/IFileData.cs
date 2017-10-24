@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace BearDenFileStorage
 {
-    public interface IMessageService
+    public interface IFileData
     {
-        string GetMessage();
+        IEnumerable<File> GetAll();
     }
 }

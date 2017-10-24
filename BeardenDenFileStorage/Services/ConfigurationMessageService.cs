@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BeardenDenFileStorage;
+using BearDenFileStorage;
 using Microsoft.Extensions.Configuration;
 
-namespace BeardenDenFileStorage
+namespace BearDenFileStorage
 {
     public class ConfigurationMessageService : IMessageService
     {

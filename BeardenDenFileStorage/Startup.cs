@@ -9,9 +9,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using System.IO;
-using BeardenDenFileStorage;
+using BearDenFileStorage;
+using Microsoft.AspNetCore.Routing;
 
-namespace BeardenDenFileStorage
+namespace BearDenFileStorage
 {
     public class Startup
     {
@@ -33,6 +34,8 @@ namespace BeardenDenFileStorage
             services.AddMvc();
             services.AddSingleton(provider => Configuration);
             services.AddSingleton<IMessageService, ConfigurationMessageService>();
+
+            services.AddScoped<IFileData, MockFileData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,12 +48,26 @@ namespace BeardenDenFileStorage
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMvcWithDefaultRoute();
+            //app.UseMvc(ConfigureRoutes);
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+                    
+            });
+            
             app.UseFileServer();
             app.Run(async (context) =>
             {
                 await context.Response.WriteAsync(msg.GetMessage());
             });
         }
+
+        //private void ConfigureRoutes(IRouteBuilder routeBuilder)
+        //{
+        //    routeBuilder.MapRoute("Default", "{controller=Home}/{action=Index}/{Id?}");
+        //}
     }
 }
