@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 
 namespace BearDenFileStorage
 {
@@ -17,11 +18,19 @@ namespace BearDenFileStorage
     {
         public IConfiguration Configuration { get; set; }
 
-        public Startup()
+        public Startup(IHostingEnvironment env)
         {
+            
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json");
+                .AddJsonFile("appsettings.json", optional:true);
+
+            if (env.IsDevelopment())
+            {
+                builder.AddUserSecrets<Startup>();
+            }
+
+            
 
             Configuration = builder.Build();
 
@@ -30,11 +39,15 @@ namespace BearDenFileStorage
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var conn = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<FileStorageDbContext>(options => options.UseSqlServer(conn));
+
             services.AddMvc();
             services.AddSingleton(provider => Configuration);
             services.AddSingleton<IMessageService, ConfigurationMessageService>();
 
-            services.AddScoped<IFileData, MockFileData>();
+            services.AddSingleton<IUserFileInfoData, SqlFileInfoData>();
+            services.AddSingleton<IUserFileContentData, SqlFileContentData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

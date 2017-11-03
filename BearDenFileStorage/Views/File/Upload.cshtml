@@ -1,0 +1,22 @@
+﻿@model BearDenFileStorage.UserFileEditViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Upload</title>
+</head>
+<body>
+	<h2>Upload File</h2>
+	<form asp-action="Upload" method="post" enctype="multipart/form-data" >
+		<div asp-validation-summary="All"></div>
+
+		<label asp-for="FormFile">File</label>
+		<input type="file" asp-for="FormFile"/>
+		<span asp-validation-for="FormFile"></span>
+		<br />
+		<input type="submit" value="Upload" />
+
+		<br />
+		@Html.ActionLink("Back to list", "Index","Home")
+	</form>
+</body>
+</html>

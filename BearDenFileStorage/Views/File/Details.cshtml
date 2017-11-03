@@ -1,9 +1,11 @@
-﻿@model IEnumerable<BearDenFileStorage.File>
+﻿@model BearDenFileStorage.UserFileViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>File</title>
 </head>
 <body>
+	@Html.ActionLink("Back to list", "Index","Home")
 	<table>
 		<tr>
 			<th>Filename</th>
@@ -14,19 +16,19 @@
 			<th>Owner</th>
 			<th>Shared with</th>
 		</tr>
-		@{ var file = Model.ElementAt(0);}
+		
 			<tr>
-				<td>@file.Filename</td>
-				<td>@file.Extension</td>
-				<td>@file.Size</td>
-				<td>@file.Created</td>
-				<td>@file.LastModified</td>
-				<td>@file.Owner</td>
+				<td>@Model.Filename</td>
+				<td>@Model.Extension</td>
+				<td>@Model.Size</td>
+				<td>@Model.UploadTime</td>
+				<td>@Model.LastEdit</td>
+				<td>@Model.Owner</td>
 				<td>
-					@for (int i = 0; i < file.SharedUsers.Count; i++)
+					@for (int i = 0; i < Model.SharedUsers.Count; i++)
 					{
 
-						@(file.SharedUsers[i] + (i != file.SharedUsers.Count - 1 ? "," : ""));
+						@(Model.SharedUsers[i] + (i != Model.SharedUsers.Count - 1 ? "," : ""));
 
 					}
 				</td>
@@ -34,5 +36,7 @@
 			</tr>
 						
 	</table>
+	
+	<a asp-action="Download" asp-controller="File" asp-route-id="@Model.FileId" download="@Model.Filename">Download</a>
 </body>
 </html>
