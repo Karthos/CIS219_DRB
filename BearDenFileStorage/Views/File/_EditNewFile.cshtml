@@ -1,0 +1,18 @@
+﻿@model UserFileEditViewModel
+
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+	<div asp-validation-summary="All"></div>
+
+	<label asp-for="FormFile">File</label>
+	<input @*type="file" *@ asp-for="FormFile" />
+	<span asp-validation-for="FormFile"></span>
+	<br />
+
+	<input type="submit" value="Edit" />
+
+	<br />
+	@*@Html.ActionLink("Back to list", "Index","Home")*@
+	<a asp-action="Files" asp-controller="Home">Back to list</a>
+</form>
+

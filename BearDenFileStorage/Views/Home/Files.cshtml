@@ -1,0 +1,16 @@
+﻿@model IEnumerable<UserFileViewModel>
+@{
+	ViewBag.Title = "Home";
+	
+}
+	@*@Html.ActionLink("Upload", "Upload", "File")*@
+	<a asp-action="Upload" asp-controller="File">Upload</a>
+	
+		
+		
+		@foreach (var file in Model)
+		{
+			@Html.Partial("_File", file);
+		}
+		
+	

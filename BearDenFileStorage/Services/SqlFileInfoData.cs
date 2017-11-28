@@ -30,7 +30,7 @@ namespace BearDenFileStorage
             };
 
             _db.Add<UserFileInfo>(newFileInfo);
-            _db.SaveChanges();
+            
         }
 
         public UserFileInfo Get(Guid Id)
@@ -41,6 +41,16 @@ namespace BearDenFileStorage
         public IEnumerable<UserFileInfo> GetAll()
         {
             return _db.FilesInfo;
+        }
+
+        public IEnumerable<UserFileInfo> GetByUser(string owner)
+        {
+            return _db.FilesInfo.Where(file => file.Owner == owner);
+        }
+
+        public int Commit()
+        {
+            return _db.SaveChanges();
         }
     }
 }

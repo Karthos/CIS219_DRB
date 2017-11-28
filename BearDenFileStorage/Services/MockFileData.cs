@@ -90,5 +90,14 @@ namespace BearDenFileStorage
             return _filesInfo;
         }
 
+        public IEnumerable<UserFileInfo> GetByUser(string owner)
+        {
+            return _filesInfo.Where(file => file.Owner == owner);
+        }
+
+        public int Commit()
+        {
+            return 0;
+        }
     }
 }

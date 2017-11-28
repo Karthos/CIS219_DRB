@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BearDenFileStorage
 {
@@ -46,8 +48,23 @@ namespace BearDenFileStorage
             services.AddSingleton(provider => Configuration);
             services.AddSingleton<IMessageService, ConfigurationMessageService>();
 
+
+            //https://docs.microsoft.com/en-us/aspnet/core/security/authorization/resourcebased?tabs=aspnetcore1x
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("FileDetailsPolicy", policy =>
+                    policy.Requirements.Add(new SameOwnerRequirement()));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, FileAuthorizationHandler>();
+
             services.AddSingleton<IUserFileInfoData, SqlFileInfoData>();
             services.AddSingleton<IUserFileContentData, SqlFileContentData>();
+
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<FileStorageDbContext>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,13 +77,15 @@ namespace BearDenFileStorage
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseIdentity();
+
             //app.UseMvc(ConfigureRoutes);
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Files}/{id?}");
                     
             });
             
@@ -79,7 +98,7 @@ namespace BearDenFileStorage
 
         //private void ConfigureRoutes(IRouteBuilder routeBuilder)
         //{
-        //    routeBuilder.MapRoute("Default", "{controller=Home}/{action=Index}/{Id?}");
+        //    routeBuilder.MapRoute("Default", "{controller=Home}/{action=Files}/{Id?}");
         //}
     }
 }

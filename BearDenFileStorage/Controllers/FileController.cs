@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -7,26 +10,65 @@ using System.Threading.Tasks;
 
 namespace BearDenFileStorage
 {
+    [Authorize]
     public class FileController : Controller
     {
         private IUserFileInfoData _filesInfo;
         private IUserFileContentData _filesContent;
+        private UserManager<User> _userManager;
+        private IAuthorizationService _authorizationService;
 
-        public FileController(IUserFileInfoData filesInfo, IUserFileContentData filesContent)
+        public FileController(IUserFileInfoData filesInfo, IUserFileContentData filesContent, UserManager<User> userManager, IAuthorizationService authorizationService)
         {
             _filesInfo = filesInfo;
             _filesContent = filesContent;
+            _userManager = userManager;
+            _authorizationService = authorizationService;
         }
 
         public ActionResult Details(Guid Id)
         {
 
             var file = _filesInfo.Get(Id);
-            if(file == null)
+
+            
+
+            if(file == null || !_authorizationService.AuthorizeAsync(HttpContext.User, file, "FileDetailsPolicy").Result)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Files", "Home");
             }
-            var model = new UserFileViewModel
+            
+                var model = new UserFileViewModel
+                {
+                    Extension = file.Filename.Substring(file.Filename.LastIndexOf('.') + 1).ToUpper(),
+                    Filename = file.Filename,
+                    Size = file.Size,
+                    LastEdit = file.LastEdit,
+                    SharedUsers = new List<string> { "asdf", "fdsa" },
+                    FileId = file.FileId,
+                    Owner = file.Owner,
+                    UploadTime = file.UploadTime
+                };
+                return View(model);
+            
+            
+            
+        }
+
+        [HttpGet]
+        public IActionResult Edit(Guid Id)
+        {
+
+            var file = _filesInfo.Get(Id);
+
+
+
+            if (file == null || !_authorizationService.AuthorizeAsync(HttpContext.User, file, "FileDetailsPolicy").Result)
+            {
+                return RedirectToAction("Files", "Home");
+            }
+
+            var FVM = new UserFileViewModel
             {
                 Extension = file.Filename.Substring(file.Filename.LastIndexOf('.') + 1).ToUpper(),
                 Filename = file.Filename,
@@ -37,8 +79,34 @@ namespace BearDenFileStorage
                 Owner = file.Owner,
                 UploadTime = file.UploadTime
             };
+
+            var FEVM = new UserFileEditViewModel();
+
+            var model = new BigEditViewModel { FVM = FVM };
             return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Guid Id, UserFileEditViewModel model)
+        {
+            var fileInfo = _filesInfo.Get(Id);
+            var fileContent = _filesContent.Get(Id);
+            if(fileInfo == null || fileContent == null || !ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            fileInfo.Filename = model.FormFile.FileName;
+            fileInfo.LastEdit = DateTime.Now;
+            fileInfo.Size = model.FormFile.Length;
             
+            fileContent.FileContent = GetFile(model.FormFile);
+            fileContent.ContentType = model.FormFile.ContentType;
+
+            _filesContent.Commit();
+            _filesInfo.Commit();
+
+            return RedirectToAction("Details", new { id = fileInfo.FileId });
         }
 
         [HttpGet]
@@ -62,10 +130,14 @@ namespace BearDenFileStorage
                     long size = model.FormFile.Length;
                     DateTime uploadTime = DateTime.Now;
                     DateTime lastEdit = DateTime.Now;
-                    string owner = "Owner";
+                    string owner = _userManager.GetUserName(HttpContext.User);
 
                     _filesContent.AddFileContent(file, contentType, fileId);
                     _filesInfo.AddFileInfo(filename, extension, size, uploadTime, lastEdit, owner, fileId);
+
+                    _filesContent.Commit();
+                    _filesInfo.Commit();
+
                     return RedirectToAction("Details", new { id = fileId });
                 }
             }

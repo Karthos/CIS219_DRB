@@ -1,11 +1,11 @@
-﻿@model BearDenFileStorage.UserFileViewModel
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-	<title>File</title>
-</head>
-<body>
-	@Html.ActionLink("Back to list", "Index","Home")
+﻿@model UserFileViewModel
+
+@{
+	ViewBag.Title = "Details";
+	
+}
+	@*@Html.ActionLink("Back to list", "Index","Home")*@
+	<a asp-action="Files" asp-controller="Home">Back to list</a>
 	<table>
 		<tr>
 			<th>Filename</th>
@@ -14,7 +14,7 @@
 			<th>Created</th>
 			<th>Last Modified</th>
 			<th>Owner</th>
-			<th>Shared with</th>
+			
 		</tr>
 		
 			<tr>
@@ -24,19 +24,10 @@
 				<td>@Model.UploadTime</td>
 				<td>@Model.LastEdit</td>
 				<td>@Model.Owner</td>
-				<td>
-					@for (int i = 0; i < Model.SharedUsers.Count; i++)
-					{
-
-						@(Model.SharedUsers[i] + (i != Model.SharedUsers.Count - 1 ? "," : ""));
-
-					}
-				</td>
+				
 				
 			</tr>
 						
 	</table>
 	
 	<a asp-action="Download" asp-controller="File" asp-route-id="@Model.FileId" download="@Model.Filename">Download</a>
-</body>
-</html>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,20 +10,22 @@ namespace BearDenFileStorage
     public class HomeController : Controller
     {
         private IUserFileInfoData _files;
-        public HomeController(IUserFileInfoData files)
+        private UserManager<User> _userManager;
+        public HomeController(IUserFileInfoData files,UserManager<User> userManager)
         {
             _files = files;
+            _userManager = userManager;
         }
 
-        public ViewResult Index()
+        public ViewResult Files()
         {
-            var model = _files.GetAll().Select(file => 
+            var model = _files.GetByUser(_userManager.GetUserName(HttpContext.User)).Select(file => 
             new UserFileViewModel {
                 Extension = file.Filename.Substring(file.Filename.LastIndexOf('.')+1).ToUpper(),
                 Filename = file.Filename,
                 Size = file.Size,
                 LastEdit = file.LastEdit,
-                SharedUsers = new List<string> { "asdf","fdsa"},
+                
                 FileId = file.FileId,
                 Owner = file.Owner,
                 UploadTime = file.UploadTime

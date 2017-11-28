@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BearDenFileStorage
 {
-    public class FileStorageDbContext : DbContext
+    public class FileStorageDbContext : IdentityDbContext<User>
     {
         public DbSet<UserFileInfo> FilesInfo { get; set; }
         public DbSet<UserFileContent> FilesContent { get; set; }

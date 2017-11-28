@@ -1,0 +1,18 @@
+﻿@model UserFileViewModel
+<section>
+	<h3>
+		@*@Html.ActionLink(file.Filename, "Details","File", new { id = file.FileId })*@
+		<a asp-action="Details" asp-controller="File" asp-route-id="@Model.FileId">@Model.Filename</a>
+		
+	</h3>
+	<div>
+		<a asp-action="Edit" asp-controller="File" asp-route-id="@Model.FileId">Edit</a>
+	</div>
+	<div>
+		@Model.Size
+	</div>
+	<div>
+		@Model.LastEdit
+	</div>
+
+</section>

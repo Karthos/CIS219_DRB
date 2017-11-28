@@ -8,8 +8,10 @@ namespace BearDenFileStorage
     public interface IUserFileInfoData
     {
         IEnumerable<UserFileInfo> GetAll();
+        IEnumerable<UserFileInfo> GetByUser(string owner);
         UserFileInfo Get(Guid Id);
         void AddFileContent(byte[] file, Guid fileId, Guid userId);
         void AddFileInfo(string filename, string extension, long size, DateTime uploadTime, DateTime lastEdit, string owner, Guid fileId);
+        int Commit();
     }
 }

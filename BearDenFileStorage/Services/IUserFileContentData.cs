@@ -10,5 +10,6 @@ namespace BearDenFileStorage
         IEnumerable<UserFileContent> GetAll();
         UserFileContent Get(Guid Id);
         void AddFileContent(byte[] file, string contentType, Guid fileId);
+        int Commit();
     }
 }

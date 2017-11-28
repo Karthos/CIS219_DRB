@@ -32,9 +32,14 @@ namespace BearDenFileStorage
             return _db.Find<UserFileContent>(Id);
         }
 
-        IEnumerable<UserFileContent> IUserFileContentData.GetAll()
+        public IEnumerable<UserFileContent> GetAll()
         {
             return _db.FilesContent;
+        }
+
+        public int Commit()
+        {
+            return _db.SaveChanges();
         }
     }
 }
