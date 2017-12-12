@@ -2,32 +2,38 @@
 
 @{
 	ViewBag.Title = "Details";
-	
+
 }
-	@*@Html.ActionLink("Back to list", "Index","Home")*@
-	<a asp-action="Files" asp-controller="Home">Back to list</a>
-	<table>
-		<tr>
-			<th>Filename</th>
-			<th>Extension</th>
-			<th>Size</th>
-			<th>Created</th>
-			<th>Last Modified</th>
-			<th>Owner</th>
-			
-		</tr>
-		
-			<tr>
-				<td>@Model.Filename</td>
-				<td>@Model.Extension</td>
-				<td>@Model.Size</td>
-				<td>@Model.UploadTime</td>
-				<td>@Model.LastEdit</td>
-				<td>@Model.Owner</td>
-				
-				
-			</tr>
-						
-	</table>
+<a class="btn btn-default" asp-action="Files" asp-controller="Home">Back to list</a>
+<section class="panel panel-primary">
+	<div class="panel-heading">
+
+		@Model.Filename
+
+	</div>
+	<div class="panel-body">
+		<div class="pull-left file-stats">
+			<div>
+				Extension: @Model.Extension
+			</div>
+			<div>
+				Uploaded: @Model.UploadTime
+			</div>
+			<div>
+				Size: @Model.Size
+			</div>
+			<div>
+				Last Editted: @Model.LastEdit
+			</div>
+			<div>
+				Owner: @Model.Owner
+			</div>
+		</div>
+		<div class="pull-right file-icon">
+			<img src="~/icons/@(Model.Extension).png" />
+		</div>
+	</div>
+	<a class="btn btn-primary" asp-action="Download" asp-controller="File" asp-route-id="@Model.FileId" download="@Model.Filename">Download</a>
+</section>
 	
-	<a asp-action="Download" asp-controller="File" asp-route-id="@Model.FileId" download="@Model.Filename">Download</a>
+	

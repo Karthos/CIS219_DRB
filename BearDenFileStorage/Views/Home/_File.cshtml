@@ -1,18 +1,22 @@
 ﻿@model UserFileViewModel
-<section>
-	<h3>
+<section class="panel panel-primary">
+	<div class="panel-heading">
 		@*@Html.ActionLink(file.Filename, "Details","File", new { id = file.FileId })*@
-		<a asp-action="Details" asp-controller="File" asp-route-id="@Model.FileId">@Model.Filename</a>
-		
-	</h3>
-	<div>
-		<a asp-action="Edit" asp-controller="File" asp-route-id="@Model.FileId">Edit</a>
-	</div>
-	<div>
-		@Model.Size
-	</div>
-	<div>
-		@Model.LastEdit
-	</div>
+		@Model.Filename
 
+	</div>
+	<div class="panel-body">
+		<div>
+			Size: @Model.Size
+		</div>
+		<div>
+			Last Editted: @Model.LastEdit
+		</div>
+
+		<div>
+			<a class="btn btn-default" asp-action="Details" asp-controller="File" asp-route-id="@Model.FileId">Details</a>
+			<a class="btn btn-default" asp-action="Edit" asp-controller="File" asp-route-id="@Model.FileId">Edit</a>
+		</div>
+	</div>
+	
 </section>

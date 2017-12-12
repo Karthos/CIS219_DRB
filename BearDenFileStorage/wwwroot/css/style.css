@@ -1,0 +1,22 @@
+﻿main {
+	width: 80%;
+	margin:auto;
+}
+footer {
+	text-align:center;
+}
+.panel {
+	margin:15px;
+}
+.panel {
+	max-width: 800px;
+	margin:auto;
+}
+.file-stats {
+	display:inline;
+	
+}
+.file-icon img {
+	display:inline;
+	width: 100px;
+}
